@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Web3Modal from 'web3modal';
-import { Typography } from '@material-ui/core';
+import { Grid, Typography, Box, Button } from '@material-ui/core';
 
 import { nftaddress, nftmarketaddress } from '../config';
 
@@ -10,7 +10,7 @@ import NFT from '../artifacts/contracts/NFT.sol/NFT.json';
 import Market from '../artifacts/contracts/NFTMarket.sol/NFTMarket.json';
 
 export default function Home() {
-  const [nft, setNfts] = useState([]);
+  const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState('not-loaded');
 
   useEffect(() => {
@@ -44,6 +44,23 @@ export default function Home() {
     setLoadingState('loaded');
   }
 
+  async function buyNft(nft) {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
+
+    const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
+    const transaction = await contract.createMarketSale(nftaddress, nft.tokenId, {
+      value: price,
+    });
+    await transaction.wait();
+    loadNFTs();
+  }
+
+  if (loadingState === 'loaded' && !nfts.length) return <h1>No items in marketplace</h1>;
+
   return (
     <div>
       <Head>
@@ -53,9 +70,29 @@ export default function Home() {
       </Head>
       <Typography>HOME Content</Typography>
 
-      <main className={styles.main}></main>
+      <main className={styles.main}>
+        <Grid container justify="center">
+          <Box style={{ maxWidth: '1600px' }}>
+            {nfts.map((nft, i) => {
+              return (
+                <Grid container key={i} direction="column">
+                  <img src={nft.image} alt="nft" />
+                  <p>{nft.name}</p>
+                  <p>{nft.description}</p>
+                  <Grid>
+                    <p>{nft.price} ETH</p>
+                    <Button variant="contained" color="secondary" onClick={() => buyNft(nft)}>
+                      Buy NFT
+                    </Button>
+                  </Grid>
+                </Grid>
+              );
+            })}
+          </Box>
+        </Grid>
+      </main>
 
-      <footer className={styles.footer}></footer>
+      <footer></footer>
     </div>
   );
 }
