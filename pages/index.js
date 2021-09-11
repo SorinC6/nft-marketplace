@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Web3Modal from 'web3modal';
@@ -70,7 +71,7 @@ export default function Home() {
       </Head>
       <Typography>HOME Content</Typography>
 
-      <main className={styles.main}>
+      <main>
         <Grid container justify="center">
           <Box style={{ maxWidth: '1600px' }}>
             {nfts.map((nft, i) => {
