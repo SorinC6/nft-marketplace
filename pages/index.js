@@ -15,10 +15,10 @@ export default function Home() {
   const [loadingState, setLoadingState] = useState('not-loaded');
 
   useEffect(() => {
-    loadNFT();
+    loadNFTs();
   }, []);
 
-  async function loadNFT() {
+  async function loadNFTs() {
     const provider = new ethers.providers.JsonRpcProvider();
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
     const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, provider);

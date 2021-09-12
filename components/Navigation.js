@@ -23,7 +23,7 @@ const Navigation = () => {
         <Link href="/create-item">
           <a>Create/Sell Digital Asset</a>
         </Link>
-        <Link href="/my-items">
+        <Link href="/my-assets">
           <a>My Digital Assets</a>
         </Link>
         <Link href="/creator-dashboard">
