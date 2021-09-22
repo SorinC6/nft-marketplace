@@ -6,7 +6,6 @@
 .pnp.js
 .secretid
 .infuraid
-.artifacts
 
 # testing
 /coverage
